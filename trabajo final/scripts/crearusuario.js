@@ -1,0 +1,1 @@
+db.createUser({user:"agente1",pwd:"159753",roles:["readWrite"]})
