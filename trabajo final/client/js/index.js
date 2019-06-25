@@ -11,7 +11,6 @@ $(document).ready(function(){
                 data : {user: nombreUsuario.val(), pass: pass.val()},
                 success : function (response) 
                 {
-                    console.log(response)
                     if (response == "Validado") 
                     {
                         window.location.href = "http://localhost:3000/main.html"

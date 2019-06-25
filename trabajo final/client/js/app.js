@@ -1,22 +1,23 @@
 
 class EventManager {
     constructor() {
-        this.urlBase = "/events"
+        this.urlBase = "/events"        
         this.obtenerDataInicial()
         this.inicializarFormulario()
         this.guardarEvento()
     }
 
     obtenerDataInicial() {
-        let url = this.urlBase + "/all"
+        let url = this.urlBase + "/all"        
         $.get(url, (response) => {
             this.inicializarCalendario(response)
         })
     }
 
     eliminarEvento(evento) {
-        let eventId = evento.id
-        $.post('/events/delete/'+eventId, {id: eventId}, (response) => {
+        let eventId = evento._id
+        console.log(eventId)
+        $.post('/events/delete', {id: eventId}, (response) => {
             alert(response)
         })
     }
@@ -30,6 +31,7 @@ class EventManager {
             end = '',
             start_hour = '',
             end_hour = '';
+             
 
             if (!$('#allDay').is(':checked')) {
                 end = $('#end_date').val()
@@ -110,9 +112,10 @@ class EventManager {
                 var y1 = ofs.top;
                 var y2 = ofs.top + trashEl.outerHeight(true);
                 if (jsEvent.pageX >= x1 && jsEvent.pageX<= x2 &&
-                    jsEvent.pageY >= y1 && jsEvent.pageY <= y2) {
+                    jsEvent.pageY >= y1 && jsEvent.pageY <= y2) 
+                    {
                         this.eliminarEvento(event)
-                        $('.calendario').fullCalendar('removeEvents', event.id);
+                        $('.calendario').fullCalendar('removeEvents', event._id);
                     }
                 }
             })
