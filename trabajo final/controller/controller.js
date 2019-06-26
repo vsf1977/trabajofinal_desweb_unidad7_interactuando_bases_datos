@@ -1,5 +1,4 @@
 var MongoClient =  require("mongodb").MongoClient
-var ObjectId = require('mongodb').ObjectID
 
 const controller = {}
 
@@ -33,13 +32,14 @@ controller.all = (req , res) =>
             collection.find().toArray((err, items) => 
             {
                 res.send(items)
+                client.close(true)
             })            
         }
-    })
+    })    
 }
 
 controller.delete = (req , res) =>
-{
+{    
     MongoClient.connect('mongodb://localhost:27017/agenda', function(err,client) 
     {
         if (err) 
@@ -50,7 +50,7 @@ controller.delete = (req , res) =>
         {
             const db = client.db('agenda')
             const collection = db.collection('citas') 
-            collection.deleteOne({"_id":  ObjectId(req.body.id)} ,(err,results) => 
+            collection.deleteOne({"id":  req.body.id} ,(err,results) => 
             {      
                 if (err) throw err               
                 res.send("Item Borrado")
@@ -61,5 +61,50 @@ controller.delete = (req , res) =>
     })
 }
 
+controller.new = (req , res) =>
+{
+    MongoClient.connect('mongodb://localhost:27017/agenda', function(err,client) 
+    {
+        if (err) 
+        {
+            res.send(err)
+        }
+        else
+        {
+            const db = client.db('agenda')
+            const collection = db.collection('citas')                   
+            collection.insertOne({"id":  req.body.id,"title":req.body.title,"start":req.body.start,"end":req.body.end}, (err, response) =>
+            {      
+                if (err) throw err               
+                res.send("Item Agregado")
+                client.close(true)
+            })
+            
+        }
+    })
+}
+
+controller.update = (req , res) =>
+{    
+    MongoClient.connect('mongodb://localhost:27017/agenda', function(err,client) 
+    {
+        if (err) 
+        {
+            res.send(err)
+        }
+        else
+        {
+            const db = client.db('agenda')
+            const collection = db.collection('citas')  
+            collection.updateOne({"id":  req.body.id},{$set:{"start":req.body.start,"end":req.body.end}}, (err, response) =>
+            {      
+                if (err) throw err               
+                res.send("Item Actualizado")  
+                client.close(true)                  
+            })
+            
+        }
+    })
+}
 
 module.exports = controller

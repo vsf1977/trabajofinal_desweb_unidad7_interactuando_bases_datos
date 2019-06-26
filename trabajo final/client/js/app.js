@@ -15,11 +15,31 @@ class EventManager {
     }
 
     eliminarEvento(evento) {
-        let eventId = evento._id
-        console.log(eventId)
+        let eventId = evento.id   
         $.post('/events/delete', {id: eventId}, (response) => {
             alert(response)
         })
+        
+    }
+
+    actualizarEvento(evento) 
+    {
+        let id = evento.id,
+        start = moment(evento.start).format('YYYY-MM-DD HH:mm:ss'),
+        end = moment(evento.end).format('YYYY-MM-DD HH:mm:ss'),
+        title = evento.title
+        let ev = 
+        {
+            title : title,
+            id: id,
+            start: start,
+            end: end       
+        }
+    
+        $.post('/events/update', ev, function(data) {
+        alert(data)
+        })
+        
     }
 
     guardarEvento() {
@@ -28,21 +48,19 @@ class EventManager {
             let nombre = $('#titulo').val(),
             start = $('#start_date').val(),
             title = $('#titulo').val(),
-            end = '',
-            start_hour = '',
-            end_hour = '';
-             
+            end = $('#end_date').val(),
+            start_hour = $('#start_hour').val(),
+            end_hour = $('#end_hour').val()            
 
-            if (!$('#allDay').is(':checked')) {
-                end = $('#end_date').val()
-                start_hour = $('#start_hour').val()
-                end_hour = $('#end_hour').val()
+            if (!$('#allDay').is(':checked') && start_hour != "" && end_hour != "") 
+            {               
                 start = start + 'T' + start_hour
                 end = end + 'T' + end_hour
             }
             let url = this.urlBase + "/new"
-            if (title != "" && start != "") {
+            if (title != "" && start != "" && end != "") {
                 let ev = {
+                    id: Math.floor(Math.random()*1e6),
                     title: title,
                     start: start,
                     end: end
@@ -113,9 +131,9 @@ class EventManager {
                 var y2 = ofs.top + trashEl.outerHeight(true);
                 if (jsEvent.pageX >= x1 && jsEvent.pageX<= x2 &&
                     jsEvent.pageY >= y1 && jsEvent.pageY <= y2) 
-                    {
-                        this.eliminarEvento(event)
-                        $('.calendario').fullCalendar('removeEvents', event._id);
+                    {   
+                        $('.calendario').fullCalendar('removeEvents', event.id)                     
+                        this.eliminarEvento(event)                        
                     }
                 }
             })

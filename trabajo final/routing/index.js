@@ -10,4 +10,8 @@ Router.get('/all', controller.all)
 
 Router.post('/delete', controller.delete)
 
+Router.post('/new', controller.new)
+
+Router.post('/update', controller.update)
+
 module.exports = Router
